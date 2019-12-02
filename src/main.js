@@ -19,19 +19,25 @@ import App from './App.vue';
 // You can change this import to `import router from './starterRouter'` to quickly start development from a blank layout.
 // import router from './router';
 import router from './starterRouter';
+// import router from './router/index';
 import NowUiKit from './plugins/now-ui-kit';
 // 完整引入elementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+// 引入vuex状态管理
+import store from './store';
 
+// import _Global from './Global.vue';
 
 Vue.config.productionTip = false;
+// this.Global.userId= 2
+// Vue.prototype.Global = _Global
 // 注册elementUI
 Vue.use(ElementUI);
 Vue.use(NowUiKit); // 插件注册
-
 // 创建并挂载根实例
 new Vue({
   router, // 导入的路由实例
+  store, // vuex状态管理
   render: h => h(App) // 渲染
 }).$mount('#app');   // 挂载到app

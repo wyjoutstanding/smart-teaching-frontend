@@ -20,10 +20,10 @@
                                             <button type="button" class="btn btn-facebook btn-icon btn-round btn-default"><i class="fab fa-facebook"></i></button> -->
                                             <!-- <h5 class="card-description"> 注册账户 </h5> -->
                                         </div>                                        <div class="form-group input-group">
-                                            <!----><div class="input-group-prepend"><i class="input-group-text now-ui-icons users_circle-08"></i></div><input aria-describedby="addon-right addon-left" placeholder="First Name..." class="form-control"><!----><!----></div>
+                                            <!----><div class="input-group-prepend"><i class="input-group-text now-ui-icons users_circle-08"></i></div><input aria-describedby="addon-right addon-left" placeholder="First Name..." class="form-control" v-model="registerForm.accountName"><!----><!----></div>
                                         <div class="form-group input-group">
-                                            <!----><div class="input-group-prepend"><i class="input-group-text now-ui-icons text_caps-small"></i></div><input aria-describedby="addon-right addon-left" placeholder="Last Name..." class="form-control"><!----><!----></div>
-                                            <div class="form-group input-group"><!----><div class="input-group-prepend"><i class="input-group-text now-ui-icons ui-1_email-85"></i></div><input aria-describedby="addon-right addon-left" placeholder="Your Email..." class="form-control"><!----><!----></div>
+                                            <!----><div class="input-group-prepend"><i class="input-group-text now-ui-icons text_caps-small"></i></div><input aria-describedby="addon-right addon-left" placeholder="Last Name..." class="form-control" v-model="registerForm.accountPassword"><!----><!----></div>
+                                            <div class="form-group input-group"><!----><div class="input-group-prepend"><i class="input-group-text now-ui-icons ui-1_email-85"></i></div><input aria-describedby="addon-right addon-left" placeholder="Your Email..." class="form-control" v-model="registerForm.accountType"><!----><!----></div>
     <div class="row text-left">
         <n-checkbox v-model="unchecked" >勾选表示同意</n-checkbox>
         <n-button size="sm" link type="primary" @click.native="modals.classic = true">条款</n-button>
@@ -60,7 +60,7 @@
             </label></div>
                     <!-- 注册按钮 -->
                     <div class="card-footer text-center row btn-group btn-group-justified">
-                        <button type="button" class="btn btn-round btn-primary btn-lg "><!---->注册<!----></button>
+                        <button type="button" class="btn btn-round btn-primary btn-lg" @click="handleRegister"><!---->注册<!----></button>
                         <!-- <div> 1313413</div> -->
                         <button  style="margin-left:40px;" type="button" class="btn btn-round  btn-lg "> <a href="\">已有账号</a></button>
                     </div></div></div></div></div></div></div>
@@ -86,6 +86,8 @@ import { Card, Button, FormGroupInput } from '@/components';
 import {Modal} from '@/components'
 import {Checkbox} from '@/components'
 import MainFooter from '@/layout/MainFooter';
+
+import {register} from '@/api/userApi.js'
 export default {
   name: 'login-page',
   bodyClass: 'login-page',
@@ -98,15 +100,38 @@ export default {
     [Checkbox.name]: Checkbox
   },
   data(){
-        return {
-          modals: {
-            classic: false
-          },
-          unchecked: false,
-          checked: true
-          
-        }
+    return {
+      modals: {
+        classic: false
+      },
+      unchecked: false,
+      checked: true,
+      registerForm:{
+        accountName:"wyj",
+        accountPassword:"123",
+        accountType:"0"
       }
+    }
+  },
+  methods: {
+    handleRegister() {
+      // alert("register")
+      register(this.registerForm.accountName, this.registerForm.accountPassword, this.registerForm.accountType)
+      .then((res)=>{
+        sessionStorage.setItem('id', res.data.data.id)
+        this.$router.push({path:'/layout'})
+        this.$message({
+          message: '恭喜，注册成功！',
+          type: 'success',
+          showClose: 'true'
+        })
+        // alert(res.data.message)})
+    })
+    .catch(()=>{
+      this.$message.error("注册失败")
+    })
+  }
+  }
 };
 </script>
 <style></style>

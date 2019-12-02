@@ -27,11 +27,25 @@
                 <el-submenu index="2" class="fr">
                 <template slot="title"><i class="el-icon-user"/>个人中心</template>
                 <!-- <span class="word">Hello</span> -->
-                    <el-menu-item index="2-1"><router-link to="/Profile" class="word">基本信息</router-link></el-menu-item>
-                    <el-menu-item index="2-2">修改密码</el-menu-item>
-                    <el-menu-item index="2-3">退出账号</el-menu-item>
+                    <el-menu-item index="2-1"><router-link to="/PersonInfo" class="word">基本信息</router-link></el-menu-item>
+                    <el-menu-item index="2-2" @click="dialogFormVisible=true">修改密码</el-menu-item>
+                    <el-menu-item index="2-3" @click="handleEditPassword()">退出账号</el-menu-item>
                 </el-submenu>
-                    
+                    <!-- Form -->
+<el-dialog title="修改密码" :visible.sync="dialogFormVisible"  :modal-append-to-body="false">
+  <el-form :model="form">
+    <el-form-item label="原密码" :label-width="formLabelWidth">
+      <el-input v-model="form.oldPassword" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="新密码" :label-width="formLabelWidth">
+      <el-input v-model="form.newPassword" autocomplete="off" show-password></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="handleEditPassword">确 定</el-button>
+  </div>
+</el-dialog>
             </el-menu>
         </el-header>
         <!-- 页面主体 -->
@@ -109,15 +123,41 @@
 </template>
 
 <script>
+import {getUserInfo,editPassword} from '../api/userApi'
   export default {
     name:"App",
     data() {
       return {
         activeIndex: '1',
-        activeIndex2: '1'
+        activeIndex2: '1',
+        dialogFormVisible: false,
+        form: {
+         oldPassword:'',
+         newPassword:'',
+        },
+        formLabelWidth: '100px'
       };
     },
     methods: {
+      handleEditPassword(){ // 修改密码
+        editPassword(this.form)
+        .then((res)=>{
+          if (res.data.code == 331) {
+            this.$message.error('原密码有误，请重新输入')
+          }
+          else {
+            this.$message({
+              message: '密码修改成功',
+            type: 'success'
+            })
+            this.dialogFormVisible = false;
+          }
+          
+        })
+        .catch(()=> {
+          this.$message.error('密码修改失败')
+        })
+      },
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
@@ -128,6 +168,20 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       }
+      // ,
+      // handleEditPassword() {
+      //   // dialogFormVisible = true
+      //   editPassword(this.form)
+      //   .then(()=>{
+      //     this.$message({
+      //       message: '密码修改成功',
+      //       type: 'success'
+      //     })
+      //   })
+      //   .catch(()=> {
+      //     this.$message.error('密码修改失败')
+      //   })
+      // }
     }
     }
   }

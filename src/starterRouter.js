@@ -16,6 +16,7 @@ import EmptyNavbar from './layout/EmptyNavbar.vue';
 import Landing from './pages/Landing.vue';
 import Profile from './pages/Profile.vue';
 import Baidu from './pages/OutPage.vue';
+import PersonInfo from './pages/PersonInfo.vue';
 
 // import myLogin from './login.vue';
 Vue.use(Router); // 引入路由插件
@@ -85,8 +86,8 @@ export default new Router({
       children: [ // 嵌套路由
         {
           path: '/',
-          name: 'Landing',
-          component: Landing
+          name: 'PersonInfo',
+          component: PersonInfo
         },
         {
           path: '/Profile',
@@ -97,6 +98,11 @@ export default new Router({
           path: '/Baidu',
           name: 'Baidu',
           component: Baidu
+        },
+        {
+          path: '/PersonInfo',
+          name: 'PersonInfo',
+          component: PersonInfo
         }
       ],
       props: {
