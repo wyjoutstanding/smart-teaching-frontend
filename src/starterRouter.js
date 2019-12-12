@@ -6,17 +6,18 @@ import StarterNavbar from './layout/StarterNavbar.vue';
 import StarterFooter from './layout/StarterFooter.vue';
 import myfooter from './pages/MyFooter.vue';
 // import StarterFooter from './layout/StarterFooter.vue';
-import Login from './pages/Login.vue';
-import Register from './pages/Register.vue';
+import Login from './pages/Login.vue'; // 登录
+import Register from './pages/Register.vue'; // 注册
 import Test from './pages/test.vue';
 import MainNavbar from './layout/MainNavbar.vue';
-import Layout from './layout/Layout.vue';
+import Layout from './layout/Layout.vue'; // 主体框架（导航栏，侧边栏）
 import EmptyNavbar from './layout/EmptyNavbar.vue';
 
 import Landing from './pages/Landing.vue';
-import Profile from './pages/Profile.vue';
-import Baidu from './pages/OutPage.vue';
-import PersonInfo from './pages/PersonInfo.vue';
+import Profile from './pages/Profile.vue'; // demo个人展示
+import Baidu from './pages/OutPage.vue'; // 百度
+import PersonInfo from './pages/PersonInfo.vue'; // 个人信息
+import Classes from './pages/Classes.vue'; // 班级管理页面
 
 // import myLogin from './login.vue';
 Vue.use(Router); // 引入路由插件
@@ -103,6 +104,11 @@ export default new Router({
           path: '/PersonInfo',
           name: 'PersonInfo',
           component: PersonInfo
+        },
+        {
+          path: '/Classes',
+          name: 'Classes',
+          component: Classes
         }
       ],
       props: {

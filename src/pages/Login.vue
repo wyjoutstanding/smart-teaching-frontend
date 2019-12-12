@@ -24,6 +24,7 @@
               addon-left-icon="now-ui-icons text_caps-small"
               placeholder="密码..."
               v-model="loginForm.accountPassword"
+              type="password"
             >
             </fg-input>
             <!-- <fg-input
@@ -83,8 +84,8 @@ export default {
   data() {
     return {
       loginForm:{
-        accountName:"wyj",
-        accountPassword:"123"
+        accountName:"wuyangjun",
+        accountPassword:"8423535"
       }
     }
   },

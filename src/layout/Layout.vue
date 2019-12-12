@@ -31,7 +31,7 @@
                     <el-menu-item index="2-2" @click="dialogFormVisible=true">修改密码</el-menu-item>
                     <el-menu-item index="2-3" @click="handleEditPassword()">退出账号</el-menu-item>
                 </el-submenu>
-                    <!-- Form -->
+<!-- 修改密码对话框 -->
 <el-dialog title="修改密码" :visible.sync="dialogFormVisible"  :modal-append-to-body="false">
   <el-form :model="form">
     <el-form-item label="原密码" :label-width="formLabelWidth">
@@ -44,6 +44,29 @@
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible = false">取 消</el-button>
     <el-button type="primary" @click="handleEditPassword">确 定</el-button>
+  </div>
+</el-dialog>
+<!-- 创建班级对话框--写在这里格式不会乱？？ -->
+<el-dialog title="创建班级" :visible.sync="formClass.dialogFormVisible"  :modal-append-to-body="false">  
+  <el-form :model="formClass">
+    <el-form-item label="班级名称" :label-width="formClass.formLabelWidth">
+      <el-input v-model="formClass.className" autocomplete="off" placeholder="班级名称"></el-input>
+    </el-form-item>
+    <el-form-item label="班级类型" :label-width="formClass.formLabelWidth">
+      <el-select v-model="formClass.classType" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <!-- <el-input v-model="formClass.classType" autocomplete="off" placeholder="班级类型"></el-input> -->
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="formClass.dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="handleCreateClass">确 定</el-button>
   </div>
 </el-dialog>
             </el-menu>
@@ -69,8 +92,8 @@
                 <span>班级管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="1-1">创建班级</el-menu-item>
-                <el-menu-item index="1-2">查看班级</el-menu-item>
+                <el-menu-item index="1-1" @click="formClass.dialogFormVisible=true">创建班级</el-menu-item>
+                <el-menu-item index="1-2"><router-link to="/Classes" class="word">查看班级</router-link></el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <!-- 题库管理 -->
@@ -123,7 +146,8 @@
 </template>
 
 <script>
-import {getUserInfo,editPassword} from '../api/userApi'
+import {getUserInfo,editPassword} from '../api/userApi' // 用户信息获取，修改密码
+import {createClass} from '../api/classApi'; // 班级创建
   export default {
     name:"App",
     data() {
@@ -135,11 +159,39 @@ import {getUserInfo,editPassword} from '../api/userApi'
          oldPassword:'',
          newPassword:'',
         },
-        formLabelWidth: '100px'
+        formLabelWidth: '100px',
+        // 班级创建表单
+        formClass: {
+          dialogFormVisible: false,
+          className: '',
+          classType: '',
+          formLabelWidth: '100px'
+        },
+        // 课程类型选择
+        options: [{
+          value: 'C语言',
+          label: 'C语言'
+        }, {
+          value: 'C++',
+          label: 'C++'
+        }, {
+          value: 'JAVA',
+          label: 'JAVA'
+        }, {
+          value: 'Python',
+          label: 'Python'
+        }, {
+          value: '汇编语言',
+          label: '汇编语言'
+        }, {
+          value: '操作系统',
+          label: '操作系统'
+        }],
       };
     },
     methods: {
-      handleEditPassword(){ // 修改密码
+      // 修改密码
+      handleEditPassword(){ 
         editPassword(this.form)
         .then((res)=>{
           if (res.data.code == 331) {
@@ -148,7 +200,7 @@ import {getUserInfo,editPassword} from '../api/userApi'
           else {
             this.$message({
               message: '密码修改成功',
-            type: 'success'
+              type: 'success'
             })
             this.dialogFormVisible = false;
           }
@@ -156,6 +208,28 @@ import {getUserInfo,editPassword} from '../api/userApi'
         })
         .catch(()=> {
           this.$message.error('密码修改失败')
+        })
+      },
+      // 创建班级
+      handleCreateClass(){
+        createClass(this.formClass.className, this.formClass.classType)
+        .then((res)=>{
+          if (res.data.code == 337) {
+            this.$message.error('该班级名已存在，请重新输入')
+          }
+          else {
+            this.$message({
+              message: '创建班级成功',
+              type: 'success'
+            })
+            this.formClass.dialogFormVisible = false;
+            // this.$route.push({path:'/Classes'}); // 重定向为班级界面
+            this.$router.push({path:'/Classes'}); // 重定向为班级界面
+          }
+          
+        })
+        .catch(()=> {
+          this.$message.error('班级创建失败')
         })
       },
       handleSelect(key, keyPath) {
