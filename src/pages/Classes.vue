@@ -1,7 +1,7 @@
 <template>
-    <div>
-      <el-container class="container">
-        <el-main>
+    <div type="flex">
+      <el-container class="container" >
+        <el-main >
         <card class="text-center"><h3>班级详情</h3></card>
           <!-- 布局-->
           <div class="row" > 
@@ -15,7 +15,7 @@
           <p class="card-text">创建时间：{{classes.classCreateTime.substr(0,10)}}</p>
           <!-- flex布局，水平均匀分布 -->
           <el-row class="row" type='flex' justify="space-around">
-            <el-button type="warning" size="medium" round>修改班级</el-button><span>  </span>
+            <el-button type="warning" size="medium" round @click="formClass.dialogFormVisible=true;classId=classes.id">修改班级</el-button><span>  </span>
           <el-button type="danger" size="medium" round @click="handleDeleteClass(classes.id)">删除班级</el-button>
           </el-row>
         </card>
@@ -30,13 +30,37 @@
           <el-button type="danger" size="medium" round>删除班级</el-button>
         </card>
       </span> -->
+<!-- 修改班级对话框 -->
+<el-dialog title="修改班级" :visible.sync="formClass.dialogFormVisible" append-to-body="true" top="10vh" center="true">
+  <el-form :model="formClass">
+    <!-- <el-divider></el-divider> -->
+    <el-form-item label="班级名称" :label-width="formClass.formLabelWidth">
+      <el-input v-model="formClass.className" autocomplete="on" placeholder="班级名称"></el-input>
+    </el-form-item>
+    <el-form-item label="班级类型" :label-width="formClass.formLabelWidth">
+      <!-- <el-input v-model="formClass.classType" autocomplete="on"></el-input> -->
+      <el-select v-model="formClass.classType" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="formClass.dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="handleModifyClass">确 定</el-button>
+  </div>
+</el-dialog>
     </div>
         </el-main>
       </el-container>
     </div>
 </template>
 <script>
-import {getClasses, deleteClass} from '../api/classApi.js'; // 班级调用api
+import {getClasses, deleteClass, modifyClass} from '../api/classApi.js'; // 班级调用api
 import { Card, Button, FormGroupInput } from '@/components';
 import { callbackify } from 'util';
 export default {
@@ -53,20 +77,38 @@ export default {
       //   classCreateTime:'创建时间',
       //   classInviteCode:'班级邀请码'
       // },
-      classesList:'' // 班级列表，接受从后端传来的数据
+      classesList:'', // 班级列表，接受从后端传来的数据
+      formClass: {
+          dialogFormVisible: false,
+          className: '',
+          classType: '',
+          formLabelWidth: '100px'
+        },
+      classId:'', // 当前被选中的班级id
+      // 课程类型选择
+        options: [{
+          value: 'C语言',
+          label: 'C语言'
+        }, {
+          value: 'C++',
+          label: 'C++'
+        }, {
+          value: 'JAVA',
+          label: 'JAVA'
+        }, {
+          value: 'Python',
+          label: 'Python'
+        }, {
+          value: '汇编语言',
+          label: '汇编语言'
+        }, {
+          value: '操作系统',
+          label: '操作系统'
+        }],
     }
   },
   created() { // 创建页面自动调用
-    // handleGetClasses()
-    getClasses() // 调用后端api
-    .then((response)=>{ // 正常请求
-      // this.classesCard.className = sessionStorage.getItem('id');
-      this.classesList = response.data.data;
-      // alert(response.data.message)
-    })
-    .catch((error)=>{ // 失败提示
-      alert(error)
-    })
+    this.handleGetClasses()
   },
   methods: { 
     handleGetClasses() {
@@ -95,13 +137,35 @@ export default {
               })
               // this.$router.push({path:"/layout"})
               // this.$router.push({path:'/Classes'}); // 重定向为班级界面
-              // handleGetClasses();
+              this.handleGetClasses();
             })
             .catch((error)=>{
               this.$message.error('班级删除失败');
             })
         })
-        
+    },
+    handleModifyClass() { // 修改班级
+        this.$confirm('此操作将修改班级信息，是否继续？','提示', { // 确认信息
+          confirmButtonText: '确定', // 确认的文本标签
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            modifyClass(this.formClass.className, this.formClass.classType, this.classId)
+            .then((response) => {
+              // alert(response.data.message);
+              this.formClass.dialogFormVisible = false;
+              this.$message({
+                message: '修改班级成功',
+                type: 'success'
+              });
+              // this.$router.push({path:"/layout"})
+              // this.$router.push({path:'/Classes'}); // 重定向为班级界面
+              this.handleGetClasses(); //必须加上this引用
+            })
+            .catch((error)=>{
+              this.$message.error('修改班级失败');
+            })
+        })  
     }
   }
 }

@@ -43,6 +43,24 @@ export function createClass(className, classType) {
   })
 }
 /**
+ * 修改班级
+ * @param {班级名} className 
+ * @param {班级类型} classType 
+ * @param {班级id} classId 
+ */
+export function modifyClass(className, classType, classId) {
+  return request({
+    url: '/api/classes/modifyClass',
+    method: 'post',
+    data: {
+      className,
+      classType,
+      id: classId,
+      teacherId: sessionStorage.getItem('id') // 创建者id（教师）
+    }
+  })
+}
+/**
  * 根据id获取用户信息
  */
 export function getUserInfo() {

@@ -27,12 +27,14 @@
                 <el-submenu index="2" class="fr">
                 <template slot="title"><i class="el-icon-user"/>个人中心</template>
                 <!-- <span class="word">Hello</span> -->
-                    <el-menu-item index="2-1"><router-link to="/PersonInfo" class="word">基本信息</router-link></el-menu-item>
+                    <!-- <el-menu-item index="2-1"><router-link to="/PersonInfo" class="word">基本信息</router-link></el-menu-item> -->
+                    <el-menu-item index="2-1" @click="$router.push({path:'/PersonInfo'})">基本信息</el-menu-item>
                     <el-menu-item index="2-2" @click="dialogFormVisible=true">修改密码</el-menu-item>
-                    <el-menu-item index="2-3" @click="handleEditPassword()">退出账号</el-menu-item>
+                    <el-menu-item index="2-3" @click="$router.push({path:'/'})">退出账号</el-menu-item>
                 </el-submenu>
 <!-- 修改密码对话框 -->
-<el-dialog title="修改密码" :visible.sync="dialogFormVisible"  :modal-append-to-body="false">
+<el-dialog title="修改密码" :visible.sync="dialogFormVisible"  :modal-append-to-body="false" append-to-body="true" center>
+  <!-- <el-divider></el-divider> -->
   <el-form :model="form">
     <el-form-item label="原密码" :label-width="formLabelWidth">
       <el-input v-model="form.oldPassword" autocomplete="off"></el-input>
@@ -47,7 +49,7 @@
   </div>
 </el-dialog>
 <!-- 创建班级对话框--写在这里格式不会乱？？ -->
-<el-dialog title="创建班级" :visible.sync="formClass.dialogFormVisible"  :modal-append-to-body="false">  
+<el-dialog title="创建班级" :visible.sync="formClass.dialogFormVisible"  :modal-append-to-body="false" append-to-body="true" center>  
   <el-form :model="formClass">
     <el-form-item label="班级名称" :label-width="formClass.formLabelWidth">
       <el-input v-model="formClass.className" autocomplete="off" placeholder="班级名称"></el-input>
@@ -93,7 +95,8 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="1-1" @click="formClass.dialogFormVisible=true">创建班级</el-menu-item>
-                <el-menu-item index="1-2"><router-link to="/Classes" class="word">查看班级</router-link></el-menu-item>
+                <!-- <el-menu-item index="1-2" @click="gotoClasses"><router-link to="/Classes" class="word">查看班级</router-link></el-menu-item> -->
+                <el-menu-item index="1-2" @click="$router.push({path:'/Classes'})">查看班级</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <!-- 题库管理 -->
@@ -138,7 +141,8 @@
             </el-aside>
             <!-- 主要显示内容 -->
             <el-main>
-                <router-view></router-view>
+              <!-- 刷新页面，router渲染页面 -->
+                <router-view v-if="isRouterAlive"></router-view>
             </el-main>
         </el-container>
     </el-container>
@@ -150,8 +154,14 @@ import {getUserInfo,editPassword} from '../api/userApi' // 用户信息获取，
 import {createClass} from '../api/classApi'; // 班级创建
   export default {
     name:"App",
+    provide () {
+    return {
+      reload: this.reload
+    }
+  },
     data() {
       return {
+        isRouterAlive: true, // reload
         activeIndex: '1',
         activeIndex2: '1',
         dialogFormVisible: false,
@@ -190,6 +200,18 @@ import {createClass} from '../api/classApi'; // 班级创建
       };
     },
     methods: {
+      // 刷新页面
+      reload () {
+        this.isRouterAlive = false
+        this.$nextTick(function () {
+          this.isRouterAlive = true
+        })
+      },
+      // click跳转班级页面
+      gotoClass() {
+        // alert('h13')
+        this.$router.push({path:'/Classes'});
+      },
       // 修改密码
       handleEditPassword(){ 
         editPassword(this.form)
@@ -223,8 +245,8 @@ import {createClass} from '../api/classApi'; // 班级创建
               type: 'success'
             })
             this.formClass.dialogFormVisible = false;
-            // this.$route.push({path:'/Classes'}); // 重定向为班级界面
-            this.$router.push({path:'/Classes'}); // 重定向为班级界面
+            this.$router.push({path:'/Classes', component: resolve => require(['../pages/Classes'],resolve)}); // 重定向为班级界面
+            this.reload(); // 重新加载
           }
           
         })

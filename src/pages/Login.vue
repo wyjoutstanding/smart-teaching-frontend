@@ -13,7 +13,7 @@
             </div>
             <!-- <h4 class="card-title text-center">登录</h4> -->
             <fg-input
-              class="no-border input-lg"
+              class="no-border input-lg "
               addon-left-icon="now-ui-icons users_circle-08"
               placeholder="邮箱/手机号..."
               v-model="loginForm.accountName"
@@ -29,8 +29,10 @@
             </fg-input>
             <!-- <fg-input
               class="no-border input-lg"
-              addon-left-icon="now-ui-icons ui-1_email-85"
-              placeholder="..."
+              addon-left-icon="now-ui-icons text_caps-small"
+              placeholder="密码..."
+              v-model="loginForm.accountPassword"
+              type="password"
             >
             </fg-input> -->
   <!-- <div class="form-group input-group"> -->
