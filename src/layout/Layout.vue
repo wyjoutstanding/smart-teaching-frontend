@@ -127,16 +127,18 @@
                                 </el-menu-item-group>
                             </el-submenu>
                             <!-- 作业管理 -->
-                            <el-submenu index="3">
+                            <!-- <el-submenu index="3"> -->
+                            <el-menu-item index="3">
                                 <template slot="title">
                                     <i class="el-icon-document"></i>
-                                    <span>作业管理</span>
+                                    <span @click="$router.push({path:'/Homework'})">作业管理</span>
                                 </template>
-                                <el-menu-item-group>
+                                <!-- <el-menu-item-group>
                                     <el-menu-item index="3-1">发布作业</el-menu-item>
                                     <el-menu-item index="3-2">查看作业</el-menu-item>
-                                </el-menu-item-group>
-                            </el-submenu>
+                                </el-menu-item-group> -->
+                            <!-- </el-submenu> -->
+                            </el-menu-item>
                             <!-- 资源管理 -->
                             <el-submenu index="4">
                                 <template slot="title">

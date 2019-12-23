@@ -20,6 +20,7 @@ import PersonInfo from './pages/PersonInfo.vue'; // 个人信息
 import Classes from './pages/Classes.vue'; // 班级管理页面
 import Upload from './pages/Upload.vue'; // 上传文件页面
 import Resource from './pages/Resource.vue'; // 资源展示/删除页面
+import Homework from './pages/Homework.vue'; // 作业创建/展示/修改/删除页面
 
 // import myLogin from './login.vue';
 Vue.use(Router); // 引入路由插件
@@ -118,6 +119,10 @@ export default new Router({
                     path: '/Resource',
                     name: 'Resource',
                     component: Resource
+                }, {
+                    path: '/Homework',
+                    name: 'Homework',
+                    component: Homework
                 }
             ],
             props: {

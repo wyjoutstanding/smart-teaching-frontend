@@ -79,13 +79,17 @@
             };
         },
         created() { // 创建该页面前先执行
-            getUserInfo() // 调用获取用户信息Api
+            this.handleGetUserInfo();
+            },
+        methods: {
+            handleGetUserInfo() {
+                getUserInfo() // 调用获取用户信息Api
                 .then((response) => { // 正常请求
                     this.personInfoForm = response.data.data;
                     // 性别转换
-                    if (this.personInfoForm.userGender == 0) 
+                    if (this.personInfoForm.userGender === 0) 
                         this.personInfoForm.userGender = '男';
-                    else if (this.personInfoForm.userGender == 1) 
+                    else if (this.personInfoForm.userGender === 1) 
                         this.personInfoForm.userGender = '女';
                         // alert(response.data.data.id)
                     }
@@ -94,7 +98,6 @@
                     alert(error)
                 })
             },
-        methods: {
             onSubmit() { // 提交保存修改后的基本信息
                 // 确定框
                 this
@@ -105,13 +108,14 @@
                     })
                     .then(() => { // 确认警告
                         // 转换性别
-                        if (this.personInfoForm.userGender == 0) 
+                        if (this.personInfoForm.userGender === 0) 
                             this.personInfoForm.userGender = '男';
-                        else if (this.personInfoForm.userGender == 1) 
+                        else if (this.personInfoForm.userGender === 1) 
                             this.personInfoForm.userGender = '女';
                         bindPersonInfo(this.personInfoForm) // 绑定
                             .then(() => { // 成功绑定
                                 this.$message({message: '个人信息修改成功', type: 'success', showClose: 'true'})
+                                this.handleGetUserInfo();
                             })
                             .catch(() => { // 绑定失败
                                 this.$message({message: '个人信息修改出现错误', type: 'error'})
