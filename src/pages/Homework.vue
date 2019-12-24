@@ -40,10 +40,10 @@
             <p class="card-text">可见班级：{{homework.className}}</p>
             <p 
               class="card-text"
-            >开始时间：{{(homework.homeworkStartTime+'').substr(0,10)+' '+(homework.homeworkStartTime+'').substr(11,8)}}</p>
+            >开始时间：{{handleFormatDate(homework.homeworkStartTime)}}</p>
             <p
               class="card-text"
-            >截止时间：{{(homework.homeworkDeadlineTime+'').substr(0,10)+' '+(homework.homeworkDeadlineTime+'').substr(11,8)}}</p>
+            >截止时间：{{handleFormatDate(homework.homeworkDeadlineTime)}}</p>
             <!-- <p class="card-text">发布时间：{{homework.homeworkPostTime.substr(0,10)}}</p>
             <p class="card-text">截止时间：{{homework.homeworkDeadlineTime.substr(0,10)}}</p>-->
             <!-- flex布局，水平均匀分布 -->
@@ -139,20 +139,6 @@
             placeholder="作业描述"
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="时间" :label-width="formHomework.formLabelWidth">
-                                <el-input v-model="formHomework.homeworkDescription" autocomplete="off" placeholder="作业描述"></el-input>
-                            </el-form-item>
-                            <el-form-item label="班级类型" :label-width="formHomework.formLabelWidth">
-                                <el-select v-model="formHomework.classType" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"></el-option>
-        </el-select>-->
-        <!-- <el-input v-model="formHomework.classType" autocomplete="off"
-        placeholder="班级类型"></el-input>-->
-        <!-- </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formHomework.dialogFormVisible = false">取 消</el-button>
@@ -227,6 +213,7 @@ import {
   getClassHomeworkRichInfo
 } from "../api/homeworkApi"; // 作业创建，修改，发布，删除，查询
 import { getClasses } from "../api/classApi"; // 班级查询
+import {formatDate} from "../api/commons"; // 日期处理
 import { Card, Button, FormGroupInput } from "@/components";
 export default {
   name: "App",
@@ -276,6 +263,9 @@ export default {
     };
   },
   methods: {
+    handleFormatDate(value) {
+      return formatDate(value)
+    },
     handleCreateHomework() {
       createHomework(this.formHomework)
         .then(res => {
